@@ -108,7 +108,7 @@
             {id:"cPKfUWDmNbo", s:62, d:20, singer:"Twins", title:"下一站天后", lyrics:"難及🔴🔴🔴🔴🔴🔴 🔴🔴🔴🔴地唱", ans:"難及他在我身邊 貼切地唱"},
             {id:"onZjMJq4LhU", s:98, d:20, singer:"容祖兒", title:"我的驕傲", lyrics:"🔴🔴創🔴🔴🔴", ans:"因你創更愉快"},
             {id:"v04DzjzSb5w", s:64, d:14, singer:"盧巧音", title:"好心分手", lyrics:"若注定🔴🔴🔴🔴🔴 不如🔴🔴🔴🔴割破", ans:"若注定有一點苦楚 不如自己親手割破"},
-            {id:"qu_FSptjRic", s:68, d:20, singer:"Beyond", title:"海闊天空", lyrics:"哪🔴🔴🔴🔴🔴你🔴🔴我", ans:"哪會怕有一天只你共我"},
+            {id:"qu_FSptjRic", s:68, d:20, singer:"Beyond", title:"海闊天空", lyrics:"哪🔴🔴🔴🔴🔴你🔴🔴過", ans:"哪會怕有一天只你共我"},
             {id:"8dqdPHuFgfI", s:147, d:14, singer:"蘇永康", title:"越吻越傷心", lyrics:"何必🔴🔴遠🔴", ans:"何必追問遠近"},
             {id:"JNocLV9gXuw", s:66, d:11, singer:"周國賢", title:"地下街", lyrics:"🔴🔴們🔴🔴地🔴🔴", ans:"途人們相繼地回家"},
             {id:"UlkToY0QfaU", s:38, d:20, singer:"麥浚龍", title:"有人", lyrics:"如🔴🔴🔴🔴🔴🔴到", ans:"如沒有信心接受到"},
@@ -127,19 +127,30 @@
             {id:"falq0Gr3rc0", s:161, d:16, singer:"Gareth.T", title:"用背脊唱情歌", lyrics:"流亡🔴🔴眼前🔴🔴 永恆在轉🔴🔴🔴🔴", ans:"流亡荒野眼前都有 永恆在轉那羣木馬"},
             {id:"y9ntnHvD4tQ", s:135, d:19, singer:"張敬軒", title:"隱形遊樂場", lyrics:"糊塗🔴🔴🔴🔴 不需要🔴🔴🔴", ans:"糊塗地闖天地 不需要三幅被"},
             {id:"jrP24ZSYHts", s:126, d:12, singer:"林家謙", title:"神奇的糊塗魔藥", lyrics:"等到🔴🔴那天 🔴🔴我會🔴🔴🔴🔴🔴", ans:"等到放晴的那天 也許我會比較好一點"},
-            {id:"DYptgVvkVLQ", s:104, d:15, singer:"周杰倫", title:"晴天", lyrics:"等到🔴🔴🔴🔴🔴 也許我會🔴🔴🔴🔴🔴", ans:"等到放晴的那天 也許我會比較好一點"},
-            {id:"bu7nU9Mhpyo", s:43, d:32, singer:"周杰倫", title:"告白氣球", lyrics:"親愛的🔴🔴🔴 你的🔴🔴 在說我🔴🔴", ans:"親愛的別任性 你的眼睛 在說我願意"},
+            {id:"DYptgVvkVLQ", s:104, d:15, singer:"周傑倫", title:"晴天", lyrics:"等到🔴🔴🔴🔴🔴 也許我會🔴🔴🔴🔴🔴", ans:"等到放晴的那天 也許我會比較好一點"},
+            {id:"bu7nU9Mhpyo", s:43, d:32, singer:"周傑倫", title:"告白氣球", lyrics:"親愛的🔴🔴🔴 你的🔴🔴 在說我🔴🔴", ans:"親愛的別任性 你的眼睛 在說我願意"},
             {id:"T4SimnaiktU", s:65, d:18, singer:"G.E.M.", title:"光年之外", lyrics:"沒有🔴🔴🔴🔴🔴要", ans:"沒有你根本不重要"},
             {id:"6aosRlnxg9I", s:129, d:24, singer:"任賢齊.", title:"對面的女孩看過來", lyrics:"原來🔴🔴🔴🔴🔴🔴🔴🔴", ans:"原來每個女孩都不簡單"},
             {id:"GtDRcXtDg-4", s:89, d:20, singer:"五月天", title:"突然好想你", lyrics:"突然🔴🔴🔴🔴睛", ans:"突然模糊的眼睛"}
         ];
+
+        // --- 新增：洗牌函數 ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // 頁面加載時先進行隨機排序
+        shuffleArray(masterSongs);
 
         function onYouTubeIframeAPIReady() { loadVideo(); }
 
         function loadVideo() {
             if(player) player.destroy();
             document.getElementById('round-info').innerText = `Song: ${idx + 1} / ${masterSongs.length}`;
-            document.getElementById('black-shield').style.display = 'flex'; // 初始/換歌顯示遮罩
+            document.getElementById('black-shield').style.display = 'flex'; 
             player = new YT.Player('player-target', {
                 height: '100%', width: '100%',
                 videoId: masterSongs[idx].id,
@@ -161,7 +172,7 @@
             player.seekTo(masterSongs[idx].s, true);
             player.playVideo();
             document.getElementById('status-msg').innerText = "PLAYING...";
-            document.getElementById('black-shield').style.display = 'flex'; // 播放中保持遮罩顯示
+            document.getElementById('black-shield').style.display = 'flex'; 
             document.getElementById('blanks').style.display = 'none';
             let elapsed = 0; let duration = masterSongs[idx].d;
             clearInterval(logicInt);
@@ -191,7 +202,6 @@
             document.getElementById('box-' + type).innerText = prefix[type] + val;
             document.getElementById('box-' + type).style.visibility = 'visible';
             
-            // 只有點擊「下一句」時，遮罩消失並繼續播放
             if(type === 'lyrics') {
                 document.getElementById('black-shield').style.display = 'none';
                 player.playVideo();
@@ -199,7 +209,13 @@
         }
 
         function nextSong() {
-            idx++; if(idx >= masterSongs.length) { alert("Complete!"); return; }
+            idx++; 
+            if(idx >= masterSongs.length) { 
+                alert("所有歌曲已播放完畢！"); 
+                // 若想重新開始並再次隨機，可取消下方註解
+                // idx = 0; shuffleArray(masterSongs); 
+                return; 
+            }
             document.getElementById('black-shield').style.display = 'flex';
             document.getElementById('blanks').style.display = 'none';
             ['singer','title','lyrics'].forEach(t => document.getElementById('box-'+t).style.visibility='hidden');
@@ -207,11 +223,13 @@
             loadVideo();
         }
 
-        function stopSong() { player.pauseVideo(); clearInterval(logicInt); }
+        function stopSong() { if(player) player.pauseVideo(); clearInterval(logicInt); }
         function replayLast() { 
-            player.seekTo(masterSongs[idx].s + masterSongs[idx].d - 5); 
-            player.playVideo(); 
-            setTimeout(()=>player.pauseVideo(), 5000); 
+            if(player) {
+                player.seekTo(masterSongs[idx].s + masterSongs[idx].d - 5); 
+                player.playVideo(); 
+                setTimeout(()=>player.pauseVideo(), 5000); 
+            }
         }
     </script>
 </body>
