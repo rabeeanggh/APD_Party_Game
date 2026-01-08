@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Party Game</title>
+    <style>
+        body { font-family: sans-serif; background: #000; color: white; text-align: center; margin: 0; padding: 10px; }
+        .score-board { display: flex; justify-content: space-around; background: #1a1a1a; padding: 10px; border-radius: 15px; border: 1px solid #333; margin-bottom: 10px; }
+        .score { font-size: 35px; font-weight: bold; color: #00d4ff; }
+        .timer { font-size: 60px; color: #ff4757; font-weight: bold; margin: 10px 0; font-family: monospace; }
+        
+        #game-container {
+            position: relative; width: 100%; max-width: 550px; aspect-ratio: 16/9; 
+            margin: 0 auto 15px auto; border-radius: 15px; overflow: hidden; border: 3px solid #444;
+            background: #000;
+        }
+
+        #mask-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; background: black;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            pointer-events: none; 
+        }
+
+        .blocker { position: absolute; background: black; z-index: 11; width: 100%; height: 65px; pointer-events: none; }
+        #top-blocker { top: 0; }
+        #bottom-blocker { bottom: 0; }
+
+        #player-target { width: 100%; height: 100%; transform: scale(1.3); }
+
+        .card { background: white; color: #333; padding: 25px; border-radius: 20px; max-width: 500px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .btn-main { background: #e74c3c; color: white; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 24px; font-weight: bold; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px #c0392b; }
+        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px #c0392b; }
+        .btn-ctrl { background: #555; color: white; border: none; padding: 12px; width: 48%; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .reveal-btn { background: #28a745; color: white; border: none; padding: 12px; width: 31%; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; }
+        .ans-box { min-height: 45px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 10px; margin-top: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; visibility: hidden; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="score-board">
+        <div>TEAM A<div id="sA" class="score">0</div><button onclick="add('A',1)">+1</button></div>
+        <div id="timer" class="timer">30s</div>
+        <div>TEAM B<div id="sB" class="score">0</div><button onclick="add('B',1)">+1</button></div>
+    </div>
+
+    <div id="game-container">
+        <div id="top-blocker" class="blocker"></div>
+        <div id="mask-overlay">
+            <div style="font-size: 50px;">🎵</div>
+            <div style="font-size: 20px; margin-top:10px; font-weight:bold;">點擊中間播放音樂</div>
+        </div>
+        <div id="bottom-blocker" class="blocker"></div>
+        <div id="player-target"></div>
+    </div>
+
+    <div class="card">
+        <button id="timerBtn" class="btn-main" onclick="startTimer()">START TIMER (倒數)</button>
+        
+        <div style="display:flex; justify-content: space-between; margin-bottom: 15px;">
+            <button class="btn-ctrl" onclick="replaySong()">🔄 REPLAY 重播</button>
+            <button class="btn-ctrl" onclick="stopSong()">⏹ STOP 停止</button>
+        </div>
+
+        <div id="blanks" style="color:#28a745; font-size:26px; font-weight:bold; margin-bottom:15px; min-height: 30px;"></div>
+
+        <div style="display:flex; justify-content: space-between;">
+            <button class="reveal-btn" onclick="rev('singer')">1. 歌手</button>
+            <button class="reveal-btn" onclick="rev('title')">2. 歌名</button>
+            <button class="reveal-btn" onclick="rev('lyrics')">3. 下一句</button>
+        </div>
+
+        <div id="box-singer" class="ans-box">歌手: ---</div>
+        <div id="box-title" class="ans-box">歌名: ---</div>
+        <div id="box-lyrics" class="ans-box" style="color: red;">下一句: ---</div>
+
+        <button class="btn-main" style="background:#000; margin-top:20px; font-size:18px;" onclick="nextSong()">NEXT SONG 下一首 ➔</button>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        let player, tInt, tLeft = 30, idx = 0;
+        const songs = [
+            {id: "falq0Gr3rc0", s: 51, singer: "Gareth.T", title: "用背脊唱情歌", lyrics: "可以望穿我心裡痛什麼", b: "🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴"},
+            {id: "p0vM9iAtAEY", s: 71, singer: "MC張天賦", title: "記憶棉", lyrics: "其實我還是我", b: "🔴🔴🔴🔴🔴🔴"},
+            {id: "6p6p6v_9H-s", s: 58, singer: "Dear Jane", title: "到底發生過什麼事", lyrics: "你要比當初更有火", b: "🔴🔴🔴🔴🔴🔴🔴"},
+            {id: "bu7nU9Rv5pY", s: 58, singer: "周杰倫", title: "告白氣球", lyrics: "親愛的愛上你", b: "🔴🔴🔴🔴🔴🔴"},
+            {id: "V7p8-X2p1Yg", s: 68, singer: "容祖兒", title: "我的驕傲", lyrics: "See me fly I am proud", b: "🔴🔴🔴🔴🔴🔴🔴🔴"},
+            {id: "V_m_eJ_j0_w", s: 62, singer: "張敬軒", title: "隱形遊樂場", lyrics: "對抗這份荒誕", b: "🔴🔴🔴🔴🔴"},
+            {id: "fUvL2r6e-zE", s: 55, singer: "陳蕾", title: "凡星", lyrics: "誰亦能自覺", b: "🔴🔴🔴🔴"},
+            {id: "mbeGvE9S53A", s: 75, singer: "MC張天賦", title: "反對無效", lyrics: "我對你一見鍾情", b: "🔴🔴🔴🔴🔴🔴"},
+            {id: "pL_Y_uN82fQ", s: 60, singer: "許廷鏗", title: "青春頌", lyrics: "記住要共未來的你", b: "🔴🔴🔴🔴🔴🔴🔴"},
+            {id: "Y9H607E_G_I", s: 45, singer: "林奕匡", title: "高山低谷", lyrics: "你那裡給風吹進", b: "🔴🔴🔴🔴🔴🔴"},
+            {id: "mO_Y_H_H_E0", s: 70, singer: "側田", title: "命硬", lyrics: "二百年後在一起", b: "🔴🔴🔴🔴🔴🔴"},
+            {id: "3S_o_mX5W_I", s: 50, singer: "楊千嬅", title: "小城大事", lyrics: "我以後不信愛情", b: "🔴🔴🔴🔴🔴🔴"},
+            {id: "o06p_BAt_L0", s: 65, singer: "李克勤", title: "紅日", lyrics: "命運就算顛沛流離", b: "🔴🔴🔴🔴🔴🔴🔴🔴"},
+            {id: "Xv6p5_v1_L0", s: 45, singer: "王菲", title: "容易受傷的女人", lyrics: "曾是在深夜裡", b: "🔴🔴🔴🔴🔴🔴"},
+            {id: "v_p_GAt_Ew0", s: 55, singer: "Beyond", title: "海闊天空", lyrics: "原諒我這一生不羈放縱", b: "🔴🔴🔴🔴🔴🔴🔴🔴"}
+        ];
+
+        function onYouTubeIframeAPIReady() { loadVideo(); }
+        function loadVideo() {
+            if(player) player.destroy();
+            player = new YT.Player('player-target', {
+                height: '100%', width: '100%',
+                videoId: songs[idx].id,
+                playerVars: { 'start': songs[idx].s, 'controls': 1, 'rel': 0, 'modestbranding': 1, 'disablekb': 1 }
+            });
+        }
+        function startTimer() {
+            document.getElementById('blanks').innerText = songs[idx].b;
+            tLeft = 30;
+            clearInterval(tInt);
+            tInt = setInterval(() => {
+                tLeft--;
+                document.getElementById('timer').innerText = tLeft + "s";
+                if(tLeft <= 0) stopSong();
+            }, 1000);
+        }
+        function stopSong() { if(player) player.pauseVideo(); clearInterval(tInt); }
+        function replaySong() { if(player) { player.seekTo(songs[idx].s); player.playVideo(); } }
+        function rev(type) {
+            document.getElementById('box-' + type).innerText = (type==='singer'?'歌手: ':type==='title'?'歌名: ':'下一句: ') + songs[idx][type];
+            document.getElementById('box-' + type).style.visibility = 'visible';
+            if(type === 'title') {
+                document.getElementById('mask-overlay').style.display = 'none';
+                document.getElementById('top-blocker').style.display = 'none';
+                document.getElementById('bottom-blocker').style.display = 'none';
+            }
+        }
+        function nextSong() {
+            idx++;
+            if(idx >= songs.length) { alert("Game Over! 感謝參與！"); return; }
+            document.getElementById('timer').innerText = "30s";
+            document.getElementById('mask-overlay').style.display = 'flex';
+            document.getElementById('top-blocker').style.display = 'block';
+            document.getElementById('bottom-blocker').style.display = 'block';
+            document.getElementById('blanks').innerText = "";
+            ['singer','title','lyrics'].forEach(t => document.getElementById('box-'+t).style.visibility='hidden');
+            loadVideo();
+        }
+        function add(t, p) {
+            let el = document.getElementById('s' + t);
+            el.innerText = parseInt(el.innerText) + p;
+        }
+    </script>
+</body>
+</html>
