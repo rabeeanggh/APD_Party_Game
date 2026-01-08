@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -50,8 +49,8 @@
     </div>
 
     <div class="card">
-        <button class="main-btn" onclick="syncStart()">⏳ START COUNTDOWN</button>
-        <div style="display:flex; gap:5px; margin-bottom:10px;"><button class="sub-btn" onclick="replayLast()">🔄 REPLAY LAST 5s</button><button class="sub-btn" style="background:#333;" onclick="stopSong()">⏹ STOP</button></div>
+        <button class="main-btn" onclick="syncStart()">⏳ Click to Start</button>
+        <div style="display:flex; gap:5px; margin-bottom:10px;"><button class="sub-btn" onclick="replayLast()">🔄 Replay Last 5s</button><button class="sub-btn" style="background:#333;" onclick="stopSong()">⏹ STOP</button></div>
         <div id="blanks"></div>
         <div class="reveal-row"><button class="rev-btn" onclick="rev('singer')">1. 歌手</button><button class="rev-btn" onclick="rev('title')">2. 歌名</button><button class="rev-btn" onclick="rev('lyrics')">3. 下一句</button></div>
         <div id="box-singer" class="ans-box">歌手: ---</div><div id="box-title" class="ans-box">歌名: ---</div><div id="box-lyrics" class="ans-box" style="color:#e74c3c;">下一句: ---</div>
@@ -65,38 +64,47 @@
         
         const masterSongs = [
             // --- 2000s - 2010s Classics ---
-            {id:"URUIcYDq3_I", s:100, d:20, singer:"陳奕迅", title:"陀飛輪", lyrics:"過去十八歲 🔴🔴🔴 沒法懂"},
-            {id:"scHDBckJXv4", s:72, d:15, singer:"古巨基", title:"必殺技", lyrics:"求你別要 🔴🔴🔴 更悲"},
-            {id:"5wJFZBulzsI", s:105, d:21, singer:"張敬軒", title:"櫻花樹下", lyrics:"如有天 🔴🔴🔴 再開"},
-            {id:"E9BgBB0JQ8E", s:95, d:19, singer:"側田", title:"命硬", lyrics:"二百年後 🔴🔴🔴"},
-            {id:"WJaufugjeSQ", s:62, d:15, singer:"楊千嬅", title:"小城大事", lyrics:"青春彷彿 🔴🔴🔴 開始"},
-            {id:"cPKfUWDmNbo", s:58, d:15, singer:"Twins", title:"下一站天后", lyrics:"在台上任我唱 🔴🔴🔴 響亮"},
-            {id:"onZjMJq4LhU", s:68, d:15, singer:"容祖兒", title:"我的驕傲", lyrics:"See me fly 🔴🔴🔴 proud"},
-            {id:"v04DzjzSb5w", s:68, d:19, singer:"盧巧音", title:"好心分手", lyrics:"是否很想我 🔴🔴🔴 分手"},
-            {id:"qu_FSptjRic", s:64, d:23, singer:"Beyond", title:"海闊天空", lyrics:"原諒我這一生 🔴🔴🔴 自由"},
-            {id:"8dqdPHuFgfI", s:92, d:18, singer:"蘇永康", title:"越吻越傷心", lyrics:"明明我已 🔴🔴🔴 份外藍"},
+            {id:"URUIcYDq3_I", s:145, d:15, singer:"陳奕迅", title:"陀飛輪", lyrics:"過去十八歲 🔴🔴🔴 沒法懂"},
+            {id:"scHDBckJXv4", s:135, d:15, singer:"古巨基", title:"必殺技", lyrics:"求你別要 🔴🔴🔴 更悲"},
+            {id:"5wJFZBulzsI", s:131, d:14, singer:"張敬軒", title:"櫻花樹下", lyrics:"如有天 🔴🔴🔴 再開"},
+            {id:"E9BgBB0JQ8E", s:128, d:20, singer:"側田", title:"命硬", lyrics:"二百年後 🔴🔴🔴"},
+            {id:"WJaufugjeSQ", s:86, d:20, singer:"楊千嬅", title:"小城大事", lyrics:"青春彷彿 🔴🔴🔴 開始"},
+            {id:"cPKfUWDmNbo", s:62, d:20, singer:"Twins", title:"下一站天后", lyrics:"在台上任我唱 🔴🔴🔴 響亮"},
+            {id:"onZjMJq4LhU", s:98, d:20, singer:"容祖兒", title:"我的驕傲", lyrics:"See me fly 🔴🔴🔴 proud"},
+            {id:"v04DzjzSb5w", s:64, d:14, singer:"盧巧音", title:"好心分手", lyrics:"是否很想我 🔴🔴🔴 分手"},
+            {id:"qu_FSptjRic", s:68, d:20, singer:"Beyond", title:"海闊天空", lyrics:"原諒我這一生 🔴🔴🔴 自由"},
+            {id:"8dqdPHuFgfI", s:147, d:14, singer:"蘇永康", title:"越吻越傷心", lyrics:"明明我已 🔴🔴🔴 份外藍"},
+	    {id:"JNocLV9gXuw", s:66, d:11, singer:"周國賢", title:"地下街", lyrics:" 🔴🔴🔴 "},
+	    {id:"UlkToY0QfaU", s:38, d:20, singer:"麥浚龍", title:"有人", lyrics:" 🔴🔴🔴 "},
+            {id:"VuvpCOL1hLQ", s:57, d:21, singer:"謝霆鋒", title:"壞習慣", lyrics:" 🔴🔴🔴 "},
+	    {id:"yd_t2VRZMhU", s:1, d:26, singer:"鄭中基", title:"幸運超人", lyrics:" 🔴🔴🔴 "},
+            {id:"TXCbnFUZr1g", s:154, d:16, singer:"鄧麗欣", title:"電燈膽", lyrics:" 🔴🔴🔴 "},
+            {id:"CJ4fKSmOf3U", s:48, d:18, singer:"蘇永康", title:"那誰", lyrics:" 🔴🔴🔴 "},
+            {id:"1WLFhjQ0cDc", s:66, d:26, singer:"王傑", title:"不浪漫罪名", lyrics:" 🔴🔴🔴 "},
             
             // --- 2020s Modern Hits ---
-            {id:"f5NzXpC8tdU", s:53, d:15, singer:"姜濤", title:"蒙著嘴說愛你", lyrics:"So I say I love you 🔴🔴🔴 裡"},
-            {id:"YZPFbnk_RS0", s:200, d:17, singer:"MC張天賦", title:"記憶棉", lyrics:"🔴🔴🔴🔴🔴🔴🔴🔴🔴  驘得了獨居"},
-            {id:"sg8V5BLMEhE", s:63, s:65, d:15, singer:"Dear Jane", title:"銀河修理員", lyrics:"祝你在 🔴🔴🔴 平安"},
-            {id:"qWhavDVsMRc", s:45, d:20, singer:"林家謙", title:"一人之境", lyrics:"一個人原來 🔴🔴🔴 盡興"},
-            {id:"7FPL4DRizgk", s:105, d:22, singer:"Edan 呂爵安", title:"E先生連環不幸事件", lyrics:"連環 🔴🔴🔴 事件"},
-            {id:"Rp4iHpTvBY8", s:57, d:18, singer:"洪嘉豪", title:"黑玻璃", lyrics:"🔴🔴🔴🔴🔴🔴 是你的🔴🔴"},
-            {id:"vER4DPlhXXI", s:58, d:15, singer:"陳蕾", title:"凡星", lyrics:"誰說平凡是我 🔴🔴🔴 的進路"},
-            {id:"falq0Gr3rc0", s:51, d:18, singer:"Gareth.T", title:"用背脊唱情歌", lyrics:"可以望穿我 🔴🔴🔴 什麼"},
-            {id:"y9ntnHvD4tQ", s:100, d:15, singer:"張敬軒", title:"隱形遊樂場", lyrics:"這刻 🔴🔴🔴 的笑容"},
-            {id:"jrP24ZSYHts", s:75, d:18, singer:"林家謙", title:"神奇的糊塗魔藥", lyrics:"拿藥水 🔴🔴🔴 傻下去"},
+            {id:"f5NzXpC8tdU", s:52, d:12, singer:"姜濤", title:"蒙著嘴說愛你", lyrics:"So I say I love you 🔴🔴🔴 裡"},
+            {id:"YZPFbnk_RS0", s:225, d:15, singer:"MC張天賦", title:"記憶棉", lyrics:"🔴🔴🔴🔴🔴🔴🔴🔴🔴  驘得了獨居"},
+            {id:"sg8V5BLMEhE", s:115, d:19, singer:"Dear Jane", title:"銀河修理員", lyrics:"祝你在 🔴🔴🔴 平安"},
+            {id:"qWhavDVsMRc", s:133, d:11, singer:"林家謙", title:"一人之境", lyrics:"一個人原來 🔴🔴🔴 盡興"},
+            {id:"7FPL4DRizgk", s:188, d:13, singer:"Edan 呂爵安", title:"E先生連環不幸事件", lyrics:"連環 🔴🔴🔴 事件"},
+            {id:"Rp4iHpTvBY8", s:166, d:15, singer:"洪嘉豪", title:"黑玻璃", lyrics:"🔴🔴🔴🔴🔴🔴 是你的🔴🔴 "},
+            {id:"vER4DPlhXXI", s:90, d:14, singer:"陳蕾", title:"凡星", lyrics:"誰說平凡是我 🔴🔴🔴 的進路"},
+            {id:"falq0Gr3rc0", s:161, d:16, singer:"Gareth.T", title:"用背脊唱情歌", lyrics:"可以望穿我 🔴🔴🔴 什麼"},
+            {id:"y9ntnHvD4tQ", s:135, d:19, singer:"張敬軒", title:"隱形遊樂場", lyrics:"這刻 🔴🔴🔴 的笑容"},
+            {id:"jrP24ZSYHts", s:126, d:12, singer:"林家謙", title:"神奇的糊塗魔藥", lyrics:"拿藥水 🔴🔴🔴 傻下去"},
             
             // --- Mandarin / Pop Hits ---
             {id:"DYptgVvkVLQ", s:104, d:15, singer:"周杰倫", title:"晴天", lyrics:"但故事的最後 🔴🔴🔴"},
             {id:"bu7nU9Mhpyo", s:106, d:11, singer:"周杰倫", title:"告白氣球", lyrics:"親愛的 🔴🔴🔴 輕易"},
             {id:"T4SimnaiktU", s:65, d:18, singer:"G.E.M.", title:"光年之外", lyrics:"緣份讓我們 🔴🔴🔴 以外"},
+	    {id:"6aosRlnxg9I", s:129, d:24, singer:"任賢齊.", title:"對面的女孩看過來", lyrics:"🔴🔴🔴 "},
             {id:"GtDRcXtDg-4", s:100, d:18, singer:"五月天", title:"突然好想你", lyrics:"突然好想你 🔴🔴🔴 在哪裡"}
         ];
 
         //const songs = masterSongs.sort(() => 0.5 - Math.random()).slice(0, 15); //play 15 songs randomly
        const songs = masterSongs; // play in sequence
+
         function onYouTubeIframeAPIReady() { loadVideo(); }
 
         function loadVideo() {
@@ -117,7 +125,7 @@
                         setTimeout(() => {
                             e.target.pauseVideo();
                             e.target.unMute();
-                            document.getElementById('status-msg').innerText = "READY";
+                            document.getElementById('status-msg').innerText = "Play the music";
                         }, 600);
                     },
                     'onError': (e) => {
@@ -154,7 +162,7 @@
             player.pauseVideo(); 
             document.getElementById('timer').innerText = "STOP"; 
             document.getElementById('timer').classList.remove('danger');
-            document.getElementById('status-msg').innerText = "GUESS!"; 
+            document.getElementById('status-msg').innerText = "請作答"; 
             document.getElementById('blanks').innerText = "下一句： " + songs[idx].lyrics; 
             document.getElementById('blanks').style.display = 'block'; 
         }
